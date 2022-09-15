@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Blog Inc.</title>
+    <link rel="stylesheet" href="{% static 'dist/tailwindcss.css' %}">
+    <link rel="stylesheet" href="{% static 'src/css/base.css' %}">
+</head>
+<body>
+    <div class="w-full flex flex-col gap-10 bg-gray-100">
+        <header class="bg-gray-900 text-white">
+            <div class="max-w-5xl w-full mx-auto">
+                <div class="h-20 flex items-center justify-between">
+                    <div>
+                        <a href="/" class="block text-2xl">
+                            Blog Inc.
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        {% if request.user.is_authenticated %}
+                            <div>
+                                <a href="{% url 'accounts:user_profile' %}" class="flex items-center gap-2 border  px-2 py-2 rounded">
+                                    <img src="{{ user.profile.profile_image.url}}" alt="" class="w-10 h-10 rounded-full">
+                                    <span>{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{% url 'accounts:user_logout' %}">Logout</a>
+                            </div>
+                        {% else %}
+                            <div>
+                                <a href="{% url 'accounts:user_login' %}">Login</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="max-w-5xl w-full mx-auto">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+        <footer> </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function() {
+            {% block domready %}{% endblock %}
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Profile Edit{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-12">
+    <header>
+        <div class="flex flex-col gap-2">
+            <h1 class="text-2xl">Welcome {{ request.user.username }}</h1>
+            <p class="text-gray-500">Edit your account to continue browsing.</p>
+        </div>
+    </header>
+    <section>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="flex flex-col gap-16">
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.first_name.id_for_label }}">First name</label>
+                        {{ user_form.first_name }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.last_name.id_for_label }}">Last name</label>
+                        {{ user_form.last_name }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.email.id_for_label }}">Email address</label>
+                        {{ user_form.email }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.cover_image.id_for_label }}">Cover Image</label>
+                        {{ profile_form.cover_image }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.profile_image.id_for_label }}">Profile Image</label>
+                        {{ profile_form.profile_image }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.date_of_birth.id_for_label }}">Date of birth</label>
+                        {{ profile_form.date_of_birth }}
+                    </div>
+                    <div class="flex flex-col gap-2 border px-4 py-2">
+                        <label for="{{ user_form.bio.id_for_label }}">Bio</label>
+                        {{ profile_form.bio }}
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="bg-gray-800 py-3 text-white">Edit your profile</button>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}
