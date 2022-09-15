@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.views.generic.base import TemplateResponseMixin, View
 from django.apps import apps
+from django.forms.models import modelform_factory
 
 from accounts.forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from accounts.models import Profile
@@ -92,7 +93,7 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     module = None
     model = None
     obj = None
-    template_name = 'accounts/manage/content/form.html'
+    template_name = 'accounts/manage/post/form.html'
     
     def get_model(self, model_name):
         if model_name in ['text', 'video', 'image', 'file']:
@@ -104,7 +105,7 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
         return Form(*args, **kwargs)
     
     def dispatch(self, request, post_id, model_name, id=None):
-        self.post = get_object_or_404(Post, id=post_id, post__author=request.user)
+        self.post = get_object_or_404(Post, id=post_id, author=request.user)
         self.model = self.get_model(model_name)
         
         if id:
@@ -127,3 +128,18 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             return redirect('accounts:user_post_content_list', self.post.id)
         return self.render_to_response({'form':form, 'object': self.obj})
     
+class ContentDeleteView(View):
+    def post(self, request, id):
+        content = get_object_or_404(Content, id=id, post__author=request.user)
+        
+        post = content.post
+        content.item.delete()
+        content.delete()
+        return redirect('accounts:user_post_content_list', post.id)
+    
+class PostContentListView(TemplateResponseMixin, View):
+    template_name = 'accounts/manage/post/content_list.html'
+    
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id, author=request.user)
+        return self.render_to_response({'post': post })

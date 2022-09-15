@@ -5,7 +5,10 @@ from django.contrib.auth.views import (LoginView, LogoutView,
 
 from accounts.forms import UserLoginForm, UserPasswordResetForm
 
-from accounts.views import user_registration, edit_profile, user_dashboard, UserProfileView, PostCreateView, PostUpdateView, PostDeleteView
+from accounts.views import (ContentDeleteView, PostContentListView, user_registration, edit_profile, 
+                            user_dashboard, UserProfileView, 
+                            PostCreateView, PostUpdateView, 
+                            PostDeleteView, ContentCreateUpdateView)
 
 app_name = 'accounts'
 
@@ -14,7 +17,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='accounts/registration/login.html', form_class=UserLoginForm), name='user_login'),
     path('logout/', LogoutView.as_view(), name='user_logout'),
     path('signup/', user_registration, name='user_signup'),
-    #
+    
+    # 
     path('profile/edit/', edit_profile, name='user_edit_profile'),
     path('profile/me/', UserProfileView.as_view(), name='user_profile'),
     path('dashboard/', user_dashboard, name='user_dashboard'),
@@ -24,6 +28,12 @@ urlpatterns = [
     path('profile/posts/<pk>/edit/', PostUpdateView.as_view(), name='user_profile_post_update'),
     path('profile/posts/<pk>/delete/', PostDeleteView.as_view(), name='user_profile_post_delete'),
     
+    #
+    path('profile/posts/<int:post_id>/content/<model_name>/create/', ContentCreateUpdateView.as_view(), name='user_post_content_create'),
+    path('profile/posts/<int:post_id>/content/<model_name>/<id>/', ContentCreateUpdateView.as_view(), name='user_post_content_update'),
+    
+    path('profile/posts/content/<int:id>/delete/', ContentDeleteView.as_view(), name='user_post_content_delete'),
+    path('profile/posts/<int:post_id>/', PostContentListView.as_view(), name='user_post_content_list'),
     # Reset Password Functionalities
     path('password_reset/', PasswordResetView.as_view(template_name='accounts/registration/password_reset_form.html', 
                                                       email_template_name='accounts/registration/password_reset_email.html', 
